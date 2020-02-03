@@ -3,109 +3,172 @@ import 'package:flutter/material.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      title: 'Donove Calculator',
+      theme: ThemeData(primarySwatch: Colors.orange),
+      home: CalcPage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
+///
+/// 四则运算页
+class CalcPage extends StatefulWidget {
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _CalcPageState createState() => _CalcPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+class _CalcPageState extends State<CalcPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Donove 计算器')),
+      body: Center(
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Expanded(
+                  // 所占据空间的比重, 这里是382/(382+618),即占据 38.2%的高度
+                  flex: 382,
+                  child: Column(children: <Widget>[
+                    // 历史结果
+                    Expanded(child: HistoryDisplay()),
+                    // 计算表达式
+                    ExpressDisplay(),
+                  ])),
+              // 分割线
+              Divider(color: Colors.black45),
+              Expanded(flex: 618, child: Keyboard()),
+            ],
+          ),
+        ),
+      ),
+    );
   }
+}
+
+///
+/// 历史结果区
+class HistoryDisplay extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _HistoryDisplayState();
+}
+
+class _HistoryDisplayState extends State<HistoryDisplay> {
+  @override
+  Widget build(BuildContext context) => ListView(
+        children: <Widget>[],
+      );
+}
+
+///
+/// 表达式区
+class ExpressDisplay extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _ExpressDisplayState();
+}
+
+class _ExpressDisplayState extends State<ExpressDisplay> {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          Text("0", style: TextStyle(fontSize: 45)),
+        ],
+      ),
+    );
+  }
+}
+
+///
+/// 按键区
+class Keyboard extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _KeyBoardState();
+  }
+}
+
+class _KeyBoardState extends State<Keyboard> {
+  static const List<CalcKey> keys = [
+    CalcKey(code: 'AC', color: Colors.deepOrangeAccent),
+    CalcKey(
+        code: 'del',
+        icon: Icon(Icons.backspace, color: Colors.deepOrangeAccent)),
+    CalcKey(code: '%', color: Colors.deepOrangeAccent),
+    CalcKey(code: '÷', color: Colors.deepOrangeAccent),
+    //
+    CalcKey(code: '7'),
+    CalcKey(code: '8'),
+    CalcKey(code: '9'),
+    CalcKey(code: 'x', color: Colors.deepOrangeAccent),
+    //
+    CalcKey(code: '4'),
+    CalcKey(code: '5'),
+    CalcKey(code: '6'),
+    CalcKey(code: '-', color: Colors.deepOrangeAccent),
+    //
+    CalcKey(code: '1'),
+    CalcKey(code: '2'),
+    CalcKey(code: '3'),
+    CalcKey(code: '+', color: Colors.deepOrangeAccent),
+    //
+    CalcKey(
+      code: 'rotation',
+      icon: Icon(Icons.screen_rotation, color: Colors.deepOrangeAccent),
+    ),
+    CalcKey(code: '0'),
+    CalcKey(code: '.'),
+    CalcKey(code: '=', color: Colors.deepOrangeAccent),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    return Wrap(
+      direction: Axis.horizontal,
+      alignment: WrapAlignment.spaceAround,
+      runAlignment: WrapAlignment.spaceAround,
+      children: keys,
     );
   }
+}
+
+///
+/// 按键 Widget
+class CalcKey extends StatelessWidget {
+  final String code;
+  final Icon icon;
+  final Color color;
+
+  const CalcKey({Key key, this.code, this.icon, this.color: Colors.black})
+      : super(key: key);
+
+  // FractionallySizedBox 可以指定控件占父控件大小的百分比, 下面的0.25即占父控件宽度的25%
+  @override
+  Widget build(BuildContext context) => FractionallySizedBox(
+        widthFactor: 0.25,
+        child: icon != null
+            ? IconButton(
+                onPressed: () {
+                  // todo 点击事件
+                },
+                icon: icon)
+            : FlatButton(
+                child: Text(
+                  '$code',
+                  style: TextStyle(
+                      color: color, fontSize: 30, fontWeight: FontWeight.w400),
+                ),
+                onPressed: () {
+                  //todo 点击事件
+                },
+              ),
+      );
 }
